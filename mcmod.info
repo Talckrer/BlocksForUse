@@ -1,0 +1,18 @@
+[
+{
+ "modid" : "BlocksForUse",
+ "name" : "Blocks for use",
+ "version" : "0.5.4",
+ "credits" : "Thanks to VSWE and his summer java programming courses!!!",
+ "authors": [
+ "Talckrer"
+ ],
+ "description": "An example mod as a part of Vswe's Summer courses",
+ "url" : "",
+ "updateUrl" : "",
+ "logoFile" : "",
+ "parent" : "",
+ "screenshots": [
+ ]
+}
+]
