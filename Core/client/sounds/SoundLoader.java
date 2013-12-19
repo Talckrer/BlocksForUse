@@ -170,41 +170,6 @@ public class SoundLoader {
 		
 	}
 	
-//	public static void AddNecessaryMusicToFolders(String path){
-//		for (File file : musicFiles){
-//			String SearchString = file.getAbsolutePath();
-//			for (int i = 1; i < folders.size(); i++){
-//				Folder folder = folders.get(i);
-//				if (removeLastThing(file.getAbsolutePath()).equals(folder.fullPath)){
-//					folder.musicFiles.add(file);
-//				}
-//			}
-//			searchingSong:
-//			while (true){
-//				SearchString = removeLastThing(SearchString);
-//				if (SearchString.equals(Info.MusicPath)){
-//					break searchingSong;
-//				}else{
-//					for (Folder folder : folders){
-//						if (SearchString.equals(folder.fullPath)){
-//							folder.AllMusicFiles.add(file);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		
-//		for (int i = 0; i < folders.size(); i++){
-//			for (Folder folder1 : folders){
-//				folders.get(i).folders = new ArrayList<Folder>();
-//				if (removeLastThing(folders.get(i).fullPath).equals(folder1.fullPath)){
-//					folder1.folders.add(folders.get(i));
-//				}
-//			}
-//		}
-//	}
-	
-	
 	public static String getLastThing(String path){
 		return path.substring(path.lastIndexOf(path.charAt(2)) + 1, path.length());
 	}

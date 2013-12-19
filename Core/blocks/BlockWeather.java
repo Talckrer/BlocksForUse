@@ -15,9 +15,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class blockWeather extends BlockContainer {
+public class BlockWeather extends BlockContainer {
 
-    public blockWeather(int id) {
+    public BlockWeather(int id) {
         super(id, Material.iron);
         setCreativeTab(BlocksForUse.tabBFUThings);
         setBlockUnbreakable();

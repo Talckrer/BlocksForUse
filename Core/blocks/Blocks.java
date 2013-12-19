@@ -21,9 +21,9 @@ public class Blocks {
     
     public static void init() {
         
-        weather = new blockWeather(BlockInfo.WEATHER_BLOCK_ID);
+        weather = new BlockWeather(BlockInfo.WEATHER_BLOCK_ID);
         GameRegistry.registerBlock(weather, BlockInfo.WEATHER_BLOCK_KEY);
-        CalindoriumOre = new blockOreCalindorium(BlockInfo.CALINDORIUM_BLOCK_ID);
+        CalindoriumOre = new BlockOreCalindorium(BlockInfo.CALINDORIUM_BLOCK_ID);
         GameRegistry.registerBlock(CalindoriumOre, BlockInfo.CALINDORIUM_BLOCK_KEY);
         Controller = new BlockController(BlockInfo.CONTROLLER_BLOCK_ID);
 //        GameRegistry.registerBlock(Controller, BlockInfo.CONTROLLER_BLOCK_KEY);
