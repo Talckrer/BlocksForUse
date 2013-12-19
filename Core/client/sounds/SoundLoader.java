@@ -3,7 +3,6 @@ package Core.client.sounds;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.filechooser.FileSystemView;
 
 import Core.ModBFU.BlocksForUse;
