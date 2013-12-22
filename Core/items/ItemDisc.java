@@ -113,9 +113,4 @@ public class ItemDisc extends Item {
 		
 	}
 	
-	@Override
-	public void onCreated(ItemStack stack, World par2World,	EntityPlayer par3EntityPlayer) {
-		stack.stackTagCompound = new NBTTagCompound();
-	}
-	
 }

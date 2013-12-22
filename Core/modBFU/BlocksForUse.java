@@ -108,8 +108,8 @@ public class BlocksForUse {
         Blocks.init();
         Blocks.addNames();
         Blocks.registerTileEntities();
-//        Items.init();
-//        Items.addNames();
+        Items.init();
+        Items.addNames();
         CraftingHandler.Init();
         new GuiHandler();
     }

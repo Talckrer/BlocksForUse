@@ -2,6 +2,7 @@ package Core.blocks;
 
 import net.minecraft.block.Block;
 import Core.tileEntities.ControllerIDs;
+import Core.tileEntities.TileEntityController;
 import Core.tileEntities.TileEntityDiscWriter;
 import Core.tileEntities.TileEntityWeather;
 import Core.tileEntities.TileEntityWire;
@@ -25,7 +26,7 @@ public class Blocks {
         CalindoriumOre = new BlockOreCalindorium(BlockInfo.CALINDORIUM_BLOCK_ID);
         GameRegistry.registerBlock(CalindoriumOre, BlockInfo.CALINDORIUM_BLOCK_KEY);
         Controller = new BlockController(BlockInfo.CONTROLLER_BLOCK_ID);
-//        GameRegistry.registerBlock(Controller, BlockInfo.CONTROLLER_BLOCK_KEY);
+        GameRegistry.registerBlock(Controller, BlockInfo.CONTROLLER_BLOCK_KEY);
         
         idControllerRegistry = new ControllerIDs();
         
@@ -38,7 +39,7 @@ public class Blocks {
     public static void addNames() {
         LanguageRegistry.addName(weather, BlockInfo.WEATHER_BLOCK_NAME);
         LanguageRegistry.addName(CalindoriumOre, BlockInfo.CALINDORIUM_BLOCK_NAME);
-//        LanguageRegistry.addName(Controller, BlockInfo.CONTROLLER_BLOCK_NAME);
+        LanguageRegistry.addName(Controller, BlockInfo.CONTROLLER_BLOCK_NAME);
         LanguageRegistry.addName(Wire, BlockInfo.WIRE_BLOCK_NAME);
         LanguageRegistry.addName(DiscWriter, BlockInfo.DISC_WRITER_BLOCK_NAME);
     }
@@ -46,7 +47,7 @@ public class Blocks {
     public static void registerTileEntities(){
         
         GameRegistry.registerTileEntity(TileEntityWeather.class, BlockInfo.WEATHER_BLOCK_TE_KEY);
-//        GameRegistry.registerTileEntity(TileEntityController.class, BlockInfo.CONTROLLER_BLOCK_TE_KEY);
+        GameRegistry.registerTileEntity(TileEntityController.class, BlockInfo.CONTROLLER_BLOCK_TE_KEY);
         GameRegistry.registerTileEntity(TileEntityWire.class, BlockInfo.WIRE_BLOCK_TE_KEY);
         GameRegistry.registerTileEntity(TileEntityDiscWriter.class, BlockInfo.DISC_WRITER_BLOCK_TE_KEY);
     }
