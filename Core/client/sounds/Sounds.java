@@ -15,8 +15,8 @@ import net.minecraft.client.Minecraft;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.mp3.MP3AudioHeader;
 
-import Core.ModBFU.BlocksForUse;
 import Core.client.Interfaces.Info;
+import Core.modBFU.BlocksForUse;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 

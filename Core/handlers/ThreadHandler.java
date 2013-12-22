@@ -1,4 +1,6 @@
-package Core.client.threads;
+package Core.handlers;
+
+import Core.client.threads.ThreadSecondUpdate;
 
 public class ThreadHandler {
 	

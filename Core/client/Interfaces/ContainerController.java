@@ -5,8 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import Core.TileEntities.TileEntityController;
 import Core.items.ItemInfo;
+import Core.tileEntities.TileEntityController;
 
 public class ContainerController extends Container {
 	

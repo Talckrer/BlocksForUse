@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Core.client.sounds.SoundLoader;
 
+
 public class Folder {
 	
 	public Folder(String fullPath, String name){

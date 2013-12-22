@@ -3,8 +3,8 @@
  */
 package Core.client.threads;
 
-import Core.ModBFU.BlocksForUse;
 import Core.client.sounds.SoundLoader;
+import Core.modBFU.BlocksForUse;
 
 
 public class ThreadSecondUpdate extends Thread implements Runnable {

@@ -1,4 +1,4 @@
-package Core.network;
+package Core.handlers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -10,13 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import Core.ModBFU.ModInformation;
-import Core.TileEntities.TileEntityController;
-import Core.TileEntities.TileEntityDiscWriter;
 import Core.client.Interfaces.ContainerController;
 import Core.client.Interfaces.ContainerDiscWriter;
 import Core.client.Interfaces.Info;
 import Core.client.sounds.SoundLoader;
+import Core.modBFU.ModInformation;
+import Core.tileEntities.TileEntityController;
+import Core.tileEntities.TileEntityDiscWriter;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;

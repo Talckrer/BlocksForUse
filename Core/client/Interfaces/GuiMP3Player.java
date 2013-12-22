@@ -14,10 +14,9 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import Core.ModBFU.BlocksForUse;
 import Core.client.sounds.SoundLoader;
 import Core.client.sounds.Sounds;
-import Core.network.PacketHandler;
+import Core.handlers.PacketHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

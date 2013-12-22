@@ -3,7 +3,6 @@ package Core.client.Interfaces;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
-import Core.client.threads.ThreadSecondUpdate;
 
 public class Info {
 	

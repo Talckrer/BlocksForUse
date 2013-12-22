@@ -1,4 +1,4 @@
-package Core.world;
+package Core.handlers;
 
 import net.minecraft.world.World;
 

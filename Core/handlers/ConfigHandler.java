@@ -1,11 +1,11 @@
-package Core.config;
+package Core.handlers;
 
 import java.io.File;
 
 import net.minecraftforge.common.Configuration;
-import Core.ModBFU.BlocksForUse;
 import Core.blocks.BlockInfo;
 import Core.items.ItemInfo;
+import Core.modBFU.BlocksForUse;
 
 public class ConfigHandler {
 

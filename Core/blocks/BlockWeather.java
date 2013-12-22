@@ -8,9 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import Core.ModBFU.BlocksForUse;
-import Core.TileEntities.TileEntityWeather;
-import Core.world.WorldHandler;
+import Core.handlers.WorldHandler;
+import Core.modBFU.BlocksForUse;
+import Core.tileEntities.TileEntityWeather;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -10,12 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import Core.ModBFU.BlocksForUse;
 import Core.blocks.BlockInfo;
 import Core.client.Interfaces.GuiColor;
 import Core.client.Interfaces.Info;
 import Core.client.sounds.SoundLoader;
 import Core.client.sounds.Sounds;
+import Core.modBFU.BlocksForUse;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

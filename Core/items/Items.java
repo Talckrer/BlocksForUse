@@ -2,7 +2,6 @@ package Core.items;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import Core.client.sounds.Sounds;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 

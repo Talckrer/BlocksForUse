@@ -1,11 +1,17 @@
-package Core.client.Interfaces;
+package Core.handlers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import Core.ModBFU.BlocksForUse;
-import Core.TileEntities.TileEntityController;
-import Core.TileEntities.TileEntityDiscWriter;
+import Core.client.Interfaces.ContainerController;
+import Core.client.Interfaces.ContainerDiscWriter;
+import Core.client.Interfaces.ContainerMP3Player;
+import Core.client.Interfaces.GuiController;
+import Core.client.Interfaces.GuiDiscWriter;
+import Core.client.Interfaces.GuiMP3Player;
+import Core.modBFU.BlocksForUse;
+import Core.tileEntities.TileEntityController;
+import Core.tileEntities.TileEntityDiscWriter;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 

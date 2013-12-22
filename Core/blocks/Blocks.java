@@ -1,11 +1,10 @@
 package Core.blocks;
 
 import net.minecraft.block.Block;
-import Core.TileEntities.ControllerIDs;
-import Core.TileEntities.TileEntityController;
-import Core.TileEntities.TileEntityDiscWriter;
-import Core.TileEntities.TileEntityWeather;
-import Core.TileEntities.TileEntityWire;
+import Core.tileEntities.ControllerIDs;
+import Core.tileEntities.TileEntityDiscWriter;
+import Core.tileEntities.TileEntityWeather;
+import Core.tileEntities.TileEntityWire;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import Core.ModBFU.BlocksForUse;
+import Core.modBFU.BlocksForUse;
 
 public class BlockOreCalindorium extends Block {
 

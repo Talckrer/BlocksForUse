@@ -1,10 +1,5 @@
 package Core.blocks;
 
-import cpw.mods.fml.common.network.FMLNetworkHandler;
-import Core.ModBFU.BlocksForUse;
-import Core.TileEntities.TileEntityController;
-import Core.TileEntities.TileEntityDiscWriter;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
@@ -13,6 +8,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import Core.modBFU.BlocksForUse;
+import Core.tileEntities.TileEntityDiscWriter;
+import cpw.mods.fml.common.network.FMLNetworkHandler;
 
 public class BlockDiscWriter extends BlockContainer {
 
