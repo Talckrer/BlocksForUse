@@ -7,12 +7,20 @@ import java.io.IOException;
 
 import javax.swing.filechooser.FileSystemView;
 
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+
+import org.lwjgl.input.Keyboard;
+
 import Core.blocks.Blocks;
 import Core.blocks.IDsinNetwork;
 import Core.client.Interfaces.ClipBoardManager;
 import Core.client.Interfaces.Info;
+import Core.client.keybinds.NextKeyBind;
+import Core.client.keybinds.PlayKeyBind;
+import Core.client.keybinds.PreviousKeyBind;
+import Core.client.keybinds.StopKeyBind;
 import Core.client.sounds.SoundLoader;
 import Core.client.sounds.Sounds;
 import Core.handlers.ConfigHandler;
@@ -22,6 +30,7 @@ import Core.handlers.PacketHandler;
 import Core.handlers.ThreadHandler;
 import Core.items.Items;
 import Core.proxies.CommonProxy;
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -112,6 +121,17 @@ public class BlocksForUse {
         Items.addNames();
         CraftingHandler.Init();
         new GuiHandler();
+        
+        KeyBinding[] keyPlay = {new KeyBinding("Play/Pause song(BFU)", Keyboard.KEY_NUMPAD5)};
+        KeyBinding[] keyStop = {new KeyBinding("Stop song(BFU)", Keyboard.KEY_NUMPAD8)};
+        KeyBinding[] keyPrevious = {new KeyBinding("Previous song(BFU)", Keyboard.KEY_NUMPAD4)};
+        KeyBinding[] keyNext = {new KeyBinding("Next song(BFU)", Keyboard.KEY_NUMPAD6)};
+        boolean[] repeat = {false};
+        System.out.println("Registering");
+        KeyBindingRegistry.registerKeyBinding(new PlayKeyBind(keyPlay, repeat));
+        KeyBindingRegistry.registerKeyBinding(new NextKeyBind(keyStop, repeat));
+        KeyBindingRegistry.registerKeyBinding(new PreviousKeyBind(keyPrevious, repeat));
+        KeyBindingRegistry.registerKeyBinding(new StopKeyBind(keyNext, repeat));
     }
     
     
