@@ -8,10 +8,15 @@ import Core.client.sounds.Sounds;
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class PlayKeyBind extends KeyHandler {
 	
 	private EnumSet tickTypes = EnumSet.of(TickType.CLIENT);
+	public static boolean keyPressed = false;
+	public static boolean keyPressedBefore = false;
 
 	public PlayKeyBind(KeyBinding[] keyBindings, boolean[] repeatings) {
 		super(keyBindings, repeatings);
@@ -24,26 +29,12 @@ public class PlayKeyBind extends KeyHandler {
 
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
-		System.out.println("Pressed play");
-		if (Sounds.fileRunning){
-			if (Sounds.fileRunning){
-				Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
-				Sounds.pauseRecord(Info.MP3PlayerIndexToOpen);
-				if (Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
-					Sounds.startFrame = Math.round(((float)Info.SecondsPlayed / Integer.parseInt(Sounds.getInfo(Info.MP3PlayerIndexToOpen, "durationInt")) * Integer.parseInt(Sounds.getInfo(Info.MP3PlayerIndexToOpen, "TotalFrames"))));
-				}
-			}
-		}else{
-			if (Sounds.startFrame == 0){
-				Sounds.playRecord(Info.MP3PlayerIndexToOpen);
-			}else{
-				Sounds.resumeRecord();
-			}
-		}
+		keyPressed = true;
 	}
 
 	@Override
 	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
+		keyPressed = false;
 	}
 
 	@Override

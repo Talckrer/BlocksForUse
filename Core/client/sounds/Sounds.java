@@ -145,7 +145,7 @@ public class Sounds implements Runnable{
 	}
 	
 	public static void stopPlaying(){
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().gameSettings.soundVolume != 0.0F){
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
 			try{
 				if (mp3Player != null){
 					mp3Player.close();

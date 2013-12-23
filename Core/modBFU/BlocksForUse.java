@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.EnumSet;
 
 import javax.swing.filechooser.FileSystemView;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
@@ -27,19 +30,24 @@ import Core.handlers.ConfigHandler;
 import Core.handlers.CraftingHandler;
 import Core.handlers.GuiHandler;
 import Core.handlers.PacketHandler;
+import Core.handlers.PlayerTickHandler;
 import Core.handlers.ThreadHandler;
 import Core.items.Items;
 import Core.proxies.CommonProxy;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = ModInformation.ID, name = ModInformation.NAME, version = ModInformation.VERSION)
 @NetworkMod(channels = {ModInformation.CHANNEL}, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
@@ -122,16 +130,19 @@ public class BlocksForUse {
         CraftingHandler.Init();
         new GuiHandler();
         
-        KeyBinding[] keyPlay = {new KeyBinding("Play/Pause song(BFU)", Keyboard.KEY_NUMPAD5)};
-        KeyBinding[] keyStop = {new KeyBinding("Stop song(BFU)", Keyboard.KEY_NUMPAD8)};
-        KeyBinding[] keyPrevious = {new KeyBinding("Previous song(BFU)", Keyboard.KEY_NUMPAD4)};
-        KeyBinding[] keyNext = {new KeyBinding("Next song(BFU)", Keyboard.KEY_NUMPAD6)};
-        boolean[] repeat = {false};
-        System.out.println("Registering");
-        KeyBindingRegistry.registerKeyBinding(new PlayKeyBind(keyPlay, repeat));
-        KeyBindingRegistry.registerKeyBinding(new NextKeyBind(keyStop, repeat));
-        KeyBindingRegistry.registerKeyBinding(new PreviousKeyBind(keyPrevious, repeat));
-        KeyBindingRegistry.registerKeyBinding(new StopKeyBind(keyNext, repeat));
+        TickRegistry.registerTickHandler(new PlayerTickHandler(EnumSet.of(TickType.PLAYER)), Side.CLIENT);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
+        	KeyBinding[] keyPlay = {new KeyBinding("Play/Pause song(BFU)", Keyboard.KEY_NUMPAD5)};
+            KeyBinding[] keyStop = {new KeyBinding("Stop song(BFU)", Keyboard.KEY_NUMPAD8)};
+            KeyBinding[] keyPrevious = {new KeyBinding("Previous song(BFU)", Keyboard.KEY_NUMPAD4)};
+            KeyBinding[] keyNext = {new KeyBinding("Next song(BFU)", Keyboard.KEY_NUMPAD6)};
+            boolean[] repeat = {false};
+            System.out.println("Registering");
+            KeyBindingRegistry.registerKeyBinding(new PlayKeyBind(keyPlay, repeat));
+            KeyBindingRegistry.registerKeyBinding(new NextKeyBind(keyNext, repeat));
+            KeyBindingRegistry.registerKeyBinding(new PreviousKeyBind(keyPrevious, repeat));
+            KeyBindingRegistry.registerKeyBinding(new StopKeyBind(keyStop, repeat));
+        }
     }
     
     

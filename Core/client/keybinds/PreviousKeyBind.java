@@ -8,11 +8,15 @@ import Core.client.sounds.Sounds;
 import net.minecraft.client.settings.KeyBinding;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class PreviousKeyBind extends KeyHandler {
 
 	private EnumSet tickTypes = EnumSet.of(TickType.CLIENT);
-	
+	public static boolean keyPressed = false;
+	public static boolean keyPressedBefore = false;
 	private boolean continuePlaying = false;
 
 	public PreviousKeyBind(KeyBinding[] keyBindings, boolean[] repeatings) {
@@ -26,29 +30,12 @@ public class PreviousKeyBind extends KeyHandler {
 
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
-		System.out.println("Pressed previous");
-		continuePlaying = Sounds.fileRunning;
-		
-		Sounds.stopPlaying();
-		if (Info.isShuffle){
-			Info.MP3PlayerIndexToOpen = Math.round((float)Math.random() * Sounds.getList().size());
-		}else{
-			if (Info.MP3PlayerIndexToOpen == 0){
-				Info.MP3PlayerIndexToOpen = Sounds.getList().size() - 1;
-			}else{
-				Info.MP3PlayerIndexToOpen -= 1;
-			}
-		}
-		Info.SecondsPlayed = 0;
-		Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
-		
-		if (continuePlaying){
-			Sounds.playRecord(Info.MP3PlayerIndexToOpen);
-		}
+		keyPressed = true;
 	}
 
 	@Override
 	public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
+		keyPressed = false;
 	}
 
 	@Override
