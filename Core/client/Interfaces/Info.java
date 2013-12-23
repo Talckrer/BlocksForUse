@@ -2,6 +2,8 @@ package Core.client.Interfaces;
 
 import java.util.ArrayList;
 
+import Core.client.Interfaces.guis.GuiMP3Player;
+
 import net.minecraft.entity.player.EntityPlayer;
 
 public class Info {

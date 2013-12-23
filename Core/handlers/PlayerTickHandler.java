@@ -2,8 +2,8 @@ package Core.handlers;
 
 import java.util.EnumSet;
 
-import Core.client.Interfaces.GuiMP3Player;
 import Core.client.Interfaces.Info;
+import Core.client.Interfaces.guis.GuiMP3Player;
 import Core.client.keybinds.NextKeyBind;
 import Core.client.keybinds.PlayKeyBind;
 import Core.client.keybinds.PreviousKeyBind;

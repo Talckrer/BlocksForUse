@@ -20,15 +20,15 @@ public class Button {
 		this.setClickEnabled(clickWork);
 	}
 	
-	int id;
-	int x;
-	int y;
-	int sizeX;
-	int sizeY;
-	int textureX;
-	int textureY;
-	boolean ClickEnabled = true;
-	boolean DoDraw = true;
+	public int id;
+	public int x;
+	public int y;
+	public int sizeX;
+	public int sizeY;
+	public int textureX;
+	public int textureY;
+	public boolean ClickEnabled = true;
+	public boolean DoDraw = true;
 	
 	
 	public void setId(int id) {

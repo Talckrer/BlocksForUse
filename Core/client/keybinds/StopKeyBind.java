@@ -2,8 +2,8 @@ package Core.client.keybinds;
 
 import java.util.EnumSet;
 
-import Core.client.Interfaces.GuiMP3Player;
 import Core.client.Interfaces.Info;
+import Core.client.Interfaces.guis.GuiMP3Player;
 import Core.client.sounds.Sounds;
 
 import net.minecraft.client.settings.KeyBinding;
