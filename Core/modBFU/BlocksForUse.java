@@ -137,7 +137,7 @@ public class BlocksForUse {
             KeyBinding[] keyPrevious = {new KeyBinding("Previous song(BFU)", Keyboard.KEY_NUMPAD4)};
             KeyBinding[] keyNext = {new KeyBinding("Next song(BFU)", Keyboard.KEY_NUMPAD6)};
             boolean[] repeat = {false};
-            System.out.println("Registering");
+            System.out.println("Registering keybinds");
             KeyBindingRegistry.registerKeyBinding(new PlayKeyBind(keyPlay, repeat));
             KeyBindingRegistry.registerKeyBinding(new NextKeyBind(keyNext, repeat));
             KeyBindingRegistry.registerKeyBinding(new PreviousKeyBind(keyPrevious, repeat));
