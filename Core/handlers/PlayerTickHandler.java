@@ -66,7 +66,7 @@ public class PlayerTickHandler implements ITickHandler {
 					Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
 					
 					if (continuePlaying){
-						player.addChatMessage("Playing: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
+						player.addChatMessage("Now playing: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
 						Sounds.playRecord(Info.MP3PlayerIndexToOpen);
 					}
 				}
@@ -94,7 +94,7 @@ public class PlayerTickHandler implements ITickHandler {
 					Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
 					
 					if (continuePlaying){
-						player.addChatMessage("Playing: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
+						player.addChatMessage("Now playing: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
 						Sounds.playRecord(Info.MP3PlayerIndexToOpen);
 					}
 				}
@@ -107,6 +107,7 @@ public class PlayerTickHandler implements ITickHandler {
 			}else{
 				if (!Sounds.files.isEmpty()){
 					if (Sounds.fileRunning){
+						player.addChatMessage("Paused");
 						Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
 						Sounds.pauseRecord(Info.MP3PlayerIndexToOpen);
 						if (Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
@@ -114,9 +115,10 @@ public class PlayerTickHandler implements ITickHandler {
 						}
 					}else{
 						if (Sounds.startFrame == 0){
-							player.addChatMessage("Playing: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
+							player.addChatMessage("Now playing: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
 							Sounds.playRecord(Info.MP3PlayerIndexToOpen);
 						}else{
+							player.addChatMessage("Resuming: "+Sounds.files.get(Info.MP3PlayerIndexToOpen).getName());
 							Sounds.resumeRecord();
 						}
 					}
