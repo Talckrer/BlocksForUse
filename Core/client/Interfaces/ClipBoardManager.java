@@ -50,9 +50,12 @@ public class ClipBoardManager implements ClipboardOwner {
 	      try {
 	        result = (String)contents.getTransferData(DataFlavor.stringFlavor);
 	      }
-	      catch (UnsupportedFlavorException | IOException ex){
-	        System.out.println(ex);
-	        ex.printStackTrace();
+	      catch (UnsupportedFlavorException e){
+	        System.out.println(e);
+	        e.printStackTrace();
+	      }catch (IOException ex){
+	    	  System.out.println(ex);
+		      ex.printStackTrace();
 	      }
 	    }
 	    return result;
