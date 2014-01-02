@@ -44,10 +44,10 @@ public class BlockDiscWriter extends BlockContainer {
     @SideOnly(Side.CLIENT)
     @Override
     public Icon getIcon(int side, int meta){
-        if (side == 2){
-            return holeIcon;
-        }else{
+        if (side == 0 || side == 1){
             return defaultIcon;
+        }else{
+            return holeIcon;
         }
     }
 	
