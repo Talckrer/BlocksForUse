@@ -62,6 +62,10 @@ public class PlayerTickHandler implements ITickHandler {
 							Info.MP3PlayerIndexToOpen += 1;
 						}
 					}
+					Info.GuiMp3Player.isPlayingIndex = Info.MP3PlayerIndexToOpen;
+					if (Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
+						Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.MP3PlayerIndexToOpen, "durationInt"));
+					}
 					Info.SecondsPlayed = 0;
 					Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
 					
@@ -89,6 +93,10 @@ public class PlayerTickHandler implements ITickHandler {
 						}else{
 							Info.MP3PlayerIndexToOpen -= 1;
 						}
+					}
+					Info.GuiMp3Player.isPlayingIndex = Info.MP3PlayerIndexToOpen;
+					if (Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
+						Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.MP3PlayerIndexToOpen, "durationInt"));
 					}
 					Info.SecondsPlayed = 0;
 					Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
