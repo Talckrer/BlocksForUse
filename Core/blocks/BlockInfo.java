@@ -47,5 +47,7 @@ public class BlockInfo {
     public static final String DISC_WRITER_BLOCK_UNLOCALIZED_NAME = "BFUDiscWriterBlock";
     public static final String DISC_WRITER_BLOCK_NAME = "Disc writer";
     public static final String DISC_WRITER_BLOCK_TE_KEY = "DiscWriterTileEntity";
+    public static final String DISC_WRITER_BLOCK_TEXTURE_DEFAULT = "DiscWriter_block_default";
+    public static final String DISC_WRITER_BLOCK_TEXTURE_HOLE = "DiscWriter_block_hole";
     
 }

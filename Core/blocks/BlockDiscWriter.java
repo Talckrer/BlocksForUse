@@ -2,15 +2,19 @@ package Core.blocks;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import Core.modBFU.BlocksForUse;
 import Core.tileEntities.TileEntityDiscWriter;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockDiscWriter extends BlockContainer {
 
@@ -23,6 +27,29 @@ public class BlockDiscWriter extends BlockContainer {
 	private int x = 0;
 	private int y = 0;
 	private int z = 0;
+	
+	@SideOnly(Side.CLIENT)
+    private Icon defaultIcon;
+    @SideOnly(Side.CLIENT)
+    private Icon holeIcon;
+    
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister register){
+    	defaultIcon = register.registerIcon(BlockInfo.TEXTURE_LOCATION + ":" + BlockInfo.DISC_WRITER_BLOCK_TEXTURE_DEFAULT);
+    	holeIcon = register.registerIcon(BlockInfo.TEXTURE_LOCATION + ":" + BlockInfo.DISC_WRITER_BLOCK_TEXTURE_HOLE);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public Icon getIcon(int side, int meta){
+        if (side == 2){
+            return holeIcon;
+        }else{
+            return defaultIcon;
+        }
+    }
 	
 	@Override
 	public TileEntity createNewTileEntity(World world) {
