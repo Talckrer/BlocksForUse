@@ -4,16 +4,19 @@ import java.util.EnumSet;
 
 import Core.client.Interfaces.Info;
 import Core.client.Interfaces.guis.GuiMP3Player;
+import Core.client.keybinds.GuiMP3PlayerKeyBind;
 import Core.client.keybinds.NextKeyBind;
 import Core.client.keybinds.PlayKeyBind;
 import Core.client.keybinds.PreviousKeyBind;
 import Core.client.keybinds.StopKeyBind;
 import Core.client.sounds.Sounds;
+import Core.modBFU.BlocksForUse;
 
 import net.minecraft.entity.player.EntityPlayer;
 
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.network.FMLNetworkHandler;
 
 public class PlayerTickHandler implements ITickHandler {
 	
@@ -145,6 +148,10 @@ public class PlayerTickHandler implements ITickHandler {
 			}
 		}
 		StopKeyBind.keyPressedBefore = StopKeyBind.keyPressed;
+		if (GuiMP3PlayerKeyBind.keyPressed && !GuiMP3PlayerKeyBind.keyPressedBefore){
+			FMLNetworkHandler.openGui(player, BlocksForUse.instance, 1, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+		}
+		GuiMP3PlayerKeyBind.keyPressedBefore = GuiMP3PlayerKeyBind.keyPressed;
 	}
 
 }
