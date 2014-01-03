@@ -20,6 +20,7 @@ import Core.blocks.Blocks;
 import Core.blocks.IDsinNetwork;
 import Core.client.Interfaces.ClipBoardManager;
 import Core.client.Interfaces.Info;
+import Core.client.keybinds.GuiMP3PlayerKeyBind;
 import Core.client.keybinds.NextKeyBind;
 import Core.client.keybinds.PlayKeyBind;
 import Core.client.keybinds.PreviousKeyBind;
@@ -136,12 +137,14 @@ public class BlocksForUse {
             KeyBinding[] keyStop = {new KeyBinding("Stop song(BFU)", Keyboard.KEY_NUMPAD8)};
             KeyBinding[] keyPrevious = {new KeyBinding("Previous song(BFU)", Keyboard.KEY_NUMPAD4)};
             KeyBinding[] keyNext = {new KeyBinding("Next song(BFU)", Keyboard.KEY_NUMPAD6)};
+            KeyBinding[] keyGuiMP3Player = {new KeyBinding("Gui MP3 Player(BFU)", Keyboard.KEY_NUMPAD0)};
             boolean[] repeat = {false};
             System.out.println("Registering keybinds");
             KeyBindingRegistry.registerKeyBinding(new PlayKeyBind(keyPlay, repeat));
             KeyBindingRegistry.registerKeyBinding(new NextKeyBind(keyNext, repeat));
             KeyBindingRegistry.registerKeyBinding(new PreviousKeyBind(keyPrevious, repeat));
             KeyBindingRegistry.registerKeyBinding(new StopKeyBind(keyStop, repeat));
+            KeyBindingRegistry.registerKeyBinding(new GuiMP3PlayerKeyBind(keyGuiMP3Player, repeat));
         }
     }
     
