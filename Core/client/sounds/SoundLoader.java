@@ -1,5 +1,6 @@
 package Core.client.sounds;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class SoundLoader {
 				ListForMusicTabs.add(new MovableSelectionMP3Gui(file));
 			}
 			
-			if (!overwrite && Info.GuiMp3Player != null && Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
+			if (!overwrite && Info.GuiMp3Player != null && Info.MP3PlayerIndexToOpen < Sounds.files.size() && Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
 				Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
 			}
 		}
@@ -125,17 +126,29 @@ public class SoundLoader {
 					folderLoaded = folders.get(index).fullPath;
 					loadListForGui(false);
 				}else{
+					Sounds.stopPlaying();
+					
 					Sounds.files = musicFiles;
 					Info.MP3PlayerIndexToOpen = index;
 					Info.SecondsPlayed = 0;
 					Info.GuiMp3Player.isPlayingIndex = index;
 					Info.GuiMp3Player.continuePlaying = true;
 					Info.GuiMp3Player.isPlaying = true;
+					
 					if (Sounds.canRetrieveInfo(Info.GuiMp3Player.isPlayingIndex)){
+						
 						Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
+						Sounds.playRecord(Info.MP3PlayerIndexToOpen);
+					}else{
+						if (Desktop.isDesktopSupported()){
+							try{
+								Desktop.getDesktop().open(Sounds.files.get(Info.MP3PlayerIndexToOpen));
+							}catch (IOException e){
+								e.printStackTrace();
+							}
+							
+						}
 					}
-					Sounds.stopPlaying();
-					Sounds.playRecord(Info.MP3PlayerIndexToOpen);
 				}
 			}
 		}
