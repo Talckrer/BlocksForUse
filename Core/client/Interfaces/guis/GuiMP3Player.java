@@ -1,10 +1,14 @@
 package Core.client.Interfaces.guis;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -94,6 +98,12 @@ public class GuiMP3Player extends GuiContainer{
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		GL11.glColor4f(1, 1, 1, 1);
 		
+		if (SoundLoader.folderLoaded.equals("")){
+			((GuiButton)buttonList.get(0)).enabled = false;
+		}else{
+			((GuiButton)buttonList.get(0)).enabled = true;
+		}
+		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft - 128, guiTop, 0, 0, 256, 256);
 		
@@ -114,8 +124,8 @@ public class GuiMP3Player extends GuiContainer{
 		if (isDragging){
 			drawTexturedQuadFit(guiLeft + 49 - 128 + Measure - 6, guiTop + 200, 12, 12, 1);
 		}else{
-			if (Sounds.fileRunning || Sounds.canRetrieveInfo(isPlayingIndex)){
-				drawTexturedQuadFit(guiLeft + 49 - 128 + (Math.round((double)Info.SecondsPlayed / Integer.parseInt(Sounds.getInfo(isPlayingIndex, "durationInt")) * 160)) - 6, guiTop + 200, 12, 12, 1);
+			if (Sounds.fileRunning || (isPlayingIndex < Sounds.files.size() && Sounds.canRetrieveInfo(isPlayingIndex))){
+				drawTexturedQuadFit(guiLeft + 49 - 128 + (Math.round((double)Info.SecondsPlayed / /*Integer.parseInt(Sounds.getInfo(isPlayingIndex, "durationInt"))durationInt * 160))*/durationInt*160 - 6)), guiTop + 200, 12, 12, 1);
 			}
 		}
 		
@@ -285,6 +295,7 @@ public class GuiMP3Player extends GuiContainer{
 		super.initGui();
 		
 		buttonList.clear();
+		buttonList.add(new GuiButton(1, guiLeft+128+56, guiTop+18, 80, 20, "Open folder"));
 		
 		buttons = new ArrayList<Button>();
 		addButton(new Button(1, -73, 228, 37, 20, 0, 0, false, true));//previous
@@ -614,5 +625,22 @@ public class GuiMP3Player extends GuiContainer{
 		}
 		
 		super.drawHoveringText(list, x, y, font);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected void actionPerformed(GuiButton button) {
+		switch (button.id){
+		case 1:
+			try{
+				if (Desktop.isDesktopSupported()){
+					Desktop.getDesktop().open(new File(SoundLoader.folderLoaded));
+				}
+			}catch (IOException e){
+				e.printStackTrace();
+			}
+			break;
+		}
+		
 	}
 }
