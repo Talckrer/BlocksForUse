@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.filechooser.FileSystemView;
 
 import Core.client.Interfaces.Folder;
+import Core.client.Interfaces.GuiColor;
 import Core.client.Interfaces.Info;
 import Core.client.Interfaces.MovableSelectionMP3Gui;
 import Core.modBFU.BlocksForUse;
@@ -126,25 +127,25 @@ public class SoundLoader {
 					folderLoaded = folders.get(index).fullPath;
 					loadListForGui(false);
 				}else{
-					Sounds.stopPlaying();
-					
-					Sounds.files = musicFiles;
-					Info.MP3PlayerIndexToOpen = index;
-					Info.SecondsPlayed = 0;
-					Info.GuiMp3Player.isPlayingIndex = index;
-					Info.GuiMp3Player.continuePlaying = true;
-					Info.GuiMp3Player.isPlaying = true;
-					
-					if (Sounds.canRetrieveInfo(Info.GuiMp3Player.isPlayingIndex)){
+					Sounds.tempFiles = musicFiles;
+					if (Sounds.tempFiles.get(index).getName().indexOf(".mp3") != -1){
+						Sounds.stopPlaying();
+						Sounds.files = Sounds.tempFiles;
+						Info.MP3PlayerIndexToOpen = index;
+						Info.SecondsPlayed = 0;
+						Info.GuiMp3Player.isPlayingIndex = index;
+						Info.GuiMp3Player.continuePlaying = true;
+						Info.GuiMp3Player.isPlaying = true;
 						
 						Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
 						Sounds.playRecord(Info.MP3PlayerIndexToOpen);
 					}else{
 						if (Desktop.isDesktopSupported()){
 							try{
-								Desktop.getDesktop().open(Sounds.files.get(Info.MP3PlayerIndexToOpen));
+								Desktop.getDesktop().open(Sounds.tempFiles.get(index));
 							}catch (IOException e){
 								e.printStackTrace();
+								Info.GuiMp3Player.player.addChatMessage(GuiColor.RED + "ERROR: Unable to find default program to open this file");
 							}
 							
 						}

@@ -81,8 +81,8 @@ public class GuiMP3Player extends GuiContainer{
 	
 	private ArrayList<Button> buttons;
 	
-	private EntityPlayer player;
-	private World world;
+	public EntityPlayer player;
+	public World world;
 	
 	private ItemStack stack;
 	public int durationInt;

@@ -28,6 +28,8 @@ public class Sounds implements Runnable{
 	
 	public static ArrayList<File> files = new ArrayList<File>();
 	
+	public static ArrayList<File> tempFiles = new ArrayList<File>();
+	
 	public static ArrayList getList(){
 		return files;
 	}

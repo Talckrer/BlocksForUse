@@ -117,6 +117,8 @@ public class PlayerTickHandler implements ITickHandler {
 				player.addChatMessage("Needs item MP3Player to be activated");
 			}else{
 				if (!Sounds.files.isEmpty()){
+					Info.GuiMp3Player.isPlaying = !Info.GuiMp3Player.isPlaying;
+					
 					if (Sounds.fileRunning){
 						player.addChatMessage("Paused");
 						Sounds.UpdateFile(Info.MP3PlayerIndexToOpen);
