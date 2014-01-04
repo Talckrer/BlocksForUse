@@ -61,7 +61,7 @@ public class SoundLoader {
 			if (overwrite){
 				readFiles(true, folderLoaded);
 			}else{
-				readFiles(Sounds.fileRunning ? false : true, folderLoaded);
+				readFiles(false, folderLoaded);
 			}
 		}
 		
