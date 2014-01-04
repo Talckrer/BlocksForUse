@@ -104,6 +104,12 @@ public class GuiMP3Player extends GuiContainer{
 			((GuiButton)buttonList.get(0)).enabled = true;
 		}
 		
+		if (Sounds.file != null){
+			((GuiButton)buttonList.get(1)).enabled = true;
+		}else{
+			((GuiButton)buttonList.get(1)).enabled = false;
+		}
+		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft - 128, guiTop, 0, 0, 256, 256);
 		
@@ -296,6 +302,7 @@ public class GuiMP3Player extends GuiContainer{
 		
 		buttonList.clear();
 		buttonList.add(new GuiButton(1, guiLeft+128+56, guiTop+18, 80, 20, "Open folder"));
+		buttonList.add(new GuiButton(2, guiLeft+128+156, guiTop+18, 80, 20, "Now playing"));
 		
 		buttons = new ArrayList<Button>();
 		addButton(new Button(1, -73, 228, 37, 20, 0, 0, false, true));//previous
@@ -638,6 +645,11 @@ public class GuiMP3Player extends GuiContainer{
 				}
 			}catch (IOException e){
 				e.printStackTrace();
+			}
+			break;
+		case 2:
+			if (Sounds.file != null){
+				SoundLoader.folderLoaded = SoundLoader.removeLastThing(Sounds.file.getAbsolutePath());
 			}
 			break;
 		}
