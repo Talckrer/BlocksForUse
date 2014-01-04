@@ -219,7 +219,7 @@ public class GuiMP3Player extends GuiContainer{
 				}
 			}
 			
-			if (!Sounds.files.isEmpty()){
+			if (!Sounds.files.isEmpty() && isPlayingIndex < Sounds.files.size()){
 				int width = 0;
 				List<String> list = fontRenderer.listFormattedStringToWidth(Sounds.getFile(isPlayingIndex).getName(), 230);
 				for (int a = 0; a < list.size(); a++){
