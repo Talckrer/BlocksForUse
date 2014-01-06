@@ -128,7 +128,7 @@ public class SoundLoader {
 					loadListForGui(false);
 				}else{
 					Sounds.tempFiles = musicFiles;
-					if (Sounds.tempFiles.get(index).getName().indexOf(".mp3") != -1){
+					if (Info.GuiMp3Player.CurrentAction == 0 && Sounds.tempFiles.get(index).getName().indexOf(".mp3") != -1){
 						Sounds.stopPlaying();
 						Sounds.files = Sounds.tempFiles;
 						Info.MP3PlayerIndexToOpen = index;
