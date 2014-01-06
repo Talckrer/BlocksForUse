@@ -19,12 +19,14 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import Core.client.Interfaces.Button;
+import Core.client.Interfaces.GuiColor;
 import Core.client.Interfaces.Info;
 import Core.client.Interfaces.MovableSelectionMP3Gui;
 import Core.client.Interfaces.containers.ContainerMP3Player;
 import Core.client.sounds.SoundLoader;
 import Core.client.sounds.Sounds;
 import Core.handlers.PacketHandler;
+import Core.modBFU.BlocksForUse;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -48,6 +50,20 @@ public class GuiMP3Player extends GuiContainer{
 			durationInt = Integer.parseInt(Sounds.getInfo(isPlayingIndex, "durationInt"));
 		}
 		isPlaying = Sounds.fileRunning;
+		
+		actions.add("Play/Open folder");
+		actions.add("Open with default program");
+		actions.add("Rename (WOP)");
+		actions.add("Delete");
+		actions.add("Move (WOP)");
+		actions.add("Make a folder (WOP)");
+		actions.add("Make a playlist (WOP)");
+		actions.add("Select a playlist (WOP)");
+		actions.add("Add to playlist (WOP)");
+		actions.add("Remove from playlist (WOP)");
+		CurrentAction = 0;
+		
+		betweenActions.add("Paste");
 		
 		SoundLoader.loadListForGui(false);
 	}
@@ -84,6 +100,18 @@ public class GuiMP3Player extends GuiContainer{
 	public EntityPlayer player;
 	public World world;
 	
+	private File movingFile;
+	
+	public int CurrentAction;
+	public boolean isExplorer = true;
+	
+	private boolean canActivate = false;
+	private boolean canChange = true;
+	private boolean canCancel = false;
+	
+	private static ArrayList<String> actions = new ArrayList<String>();
+	private static ArrayList<String> betweenActions = new ArrayList<String>();
+	
 	private ItemStack stack;
 	public int durationInt;
 	private boolean draggingDisplay = false;
@@ -109,6 +137,9 @@ public class GuiMP3Player extends GuiContainer{
 		}else{
 			((GuiButton)buttonList.get(1)).enabled = false;
 		}
+		((GuiButton)buttonList.get(2)).enabled = canChange;
+		((GuiButton)buttonList.get(3)).enabled = canActivate;
+		((GuiButton)buttonList.get(4)).enabled = canCancel;
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft - 128, guiTop, 0, 0, 256, 256);
@@ -244,6 +275,13 @@ public class GuiMP3Player extends GuiContainer{
 				fontRenderer.drawString(getSecondsPlayedAsString(convertMeasureToTime(Measure, durationInt)), guiLeft + 52 - 128 + Measure - 16, guiTop + 180, 0x151515);
 			}
 			
+			if (canChange){
+				fontRenderer.drawString(actions.get(CurrentAction), guiLeft-128+18, guiTop+45, 0x010101);
+			}else{
+				fontRenderer.drawString(betweenActions.get(0), guiLeft-128+18, guiTop+45, 0x010101);
+			}
+			
+			
 
 		}
 	}
@@ -303,6 +341,9 @@ public class GuiMP3Player extends GuiContainer{
 		buttonList.clear();
 		buttonList.add(new GuiButton(1, guiLeft+128+56, guiTop+18, 80, 20, "Open folder"));
 		buttonList.add(new GuiButton(2, guiLeft+128+150, guiTop+18, 80, 20, "Now playing"));
+		buttonList.add(new GuiButton(3, guiLeft-128+18, guiTop+62, 80, 20, "Change action"));
+		buttonList.add(new GuiButton(4, guiLeft-128+102, guiTop+62, 60, 20, "Activate"));
+		buttonList.add(new GuiButton(5, guiLeft-128+172, guiTop+62, 60, 20, "Cancel"));
 		
 		buttons = new ArrayList<Button>();
 		addButton(new Button(1, -73, 228, 37, 20, 0, 0, false, true));//previous
@@ -502,12 +543,44 @@ public class GuiMP3Player extends GuiContainer{
 //					}
 					for (MovableSelectionMP3Gui bar : folderTabs){
 						if (isPointInRegion(128+13, bar.guiY, 225, 32, x, y)){
-							SoundLoader.ButtonClicked(true, bar.ID-1);
+							if (canChange){
+								if (CurrentAction == 0 || CurrentAction == 1){
+									SoundLoader.ButtonClicked(true, bar.ID-1);
+								}else if (CurrentAction == 2){
+									
+								}else if (CurrentAction == 3){
+									if (new File(bar.folder.fullPath).listFiles().length != 0){
+										player.addChatMessage(GuiColor.RED + "Error: Directory not empty");
+									}else{
+										new File(bar.folder.fullPath).delete();
+									}
+								}else if (CurrentAction == 4){
+									canChange = false;
+									canCancel = true;
+									canActivate = true;
+									movingFile = new File(SoundLoader.folders.get(bar.ID-1).fullPath);
+								}
+							}
 						}
 					}
 					for (MovableSelectionMP3Gui bar : musicTabs){
 						if (isPointInRegion(128+13, bar.guiY, 225, 32, x, y)){
-							SoundLoader.ButtonClicked(false, bar.ID-1);
+							if (canChange){
+								if (CurrentAction == 0 || CurrentAction == 1){
+									SoundLoader.ButtonClicked(false, bar.ID-1);
+								}else if (CurrentAction == 2){
+									
+								}else if (CurrentAction == 3){
+									bar.file.delete();
+									SoundLoader.loadListForGui(false);
+								}else if (CurrentAction == 4){
+									canChange = false;
+									canCancel = true;
+									canActivate = true;
+									movingFile = SoundLoader.musicFiles.get(bar.ID-1);
+								}
+							}
+							
 						}
 					}
 					
@@ -652,6 +725,28 @@ public class GuiMP3Player extends GuiContainer{
 				SoundLoader.folderLoaded = SoundLoader.removeLastThing(Sounds.file.getAbsolutePath());
 				SoundLoader.loadListForGui(false);
 			}
+			break;
+		case 3://change
+			if (CurrentAction != actions.size()-1){
+				CurrentAction++;
+			}else{
+				CurrentAction = 0;
+			}
+			break;
+		case 4://activate
+			if (!canChange){//you want to move loaded file here
+				System.out.println("Moving file: " + movingFile.getAbsolutePath());
+				movingFile.renameTo(new File(SoundLoader.folderLoaded+BlocksForUse.BackSlash+movingFile.getName()));
+				System.out.println("New location: " + movingFile.getAbsolutePath());
+				canChange = true;
+				canCancel = false;
+				canActivate = false;
+				SoundLoader.loadListForGui(false);
+			}else{
+				
+			}
+			break;
+		case 5://cancel
 			break;
 		}
 		
