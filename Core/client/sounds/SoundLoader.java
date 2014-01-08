@@ -77,9 +77,9 @@ public class SoundLoader {
 				ListForMusicTabs.add(new MovableSelectionMP3Gui(file));
 			}
 			
-			if (!overwrite && Info.GuiMp3Player != null && Info.MP3PlayerIndexToOpen < Sounds.files.size() && Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
-				Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
-			}
+//			if (!overwrite && Info.GuiMp3Player != null && Info.MP3PlayerIndexToOpen < Sounds.files.size() && Sounds.canRetrieveInfo(Info.MP3PlayerIndexToOpen)){
+//				Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
+//			}
 		}
 			
 		Info.musicTabs = ListForMusicTabs;

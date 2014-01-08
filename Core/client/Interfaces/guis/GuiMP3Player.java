@@ -16,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import org.apache.commons.io.FilenameUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import Core.client.Interfaces.Button;
@@ -55,8 +57,8 @@ public class GuiMP3Player extends GuiContainer{
 		actions.add("Open with default program");
 		actions.add("Rename (WOP)");
 		actions.add("Delete");
-		actions.add("Move (WOP)");
-		actions.add("Make a folder (WOP)");
+		actions.add("Move");
+		actions.add("Make a folder/file (WOP)");
 		actions.add("Make a playlist (WOP)");
 		actions.add("Select a playlist (WOP)");
 		actions.add("Add to playlist (WOP)");
@@ -64,6 +66,7 @@ public class GuiMP3Player extends GuiContainer{
 		CurrentAction = 0;
 		
 		betweenActions.add("Paste");
+		betweenActions.add("Rename");
 		
 		SoundLoader.loadListForGui(false);
 	}
@@ -93,6 +96,7 @@ public class GuiMP3Player extends GuiContainer{
 	private static final ResourceLocation textureShuffleOn = new ResourceLocation("bfu", "textures/gui/MP3PlayerGuiShuffleOn.png");
 	private static final ResourceLocation textureRepeatOff = new ResourceLocation("bfu", "textures/gui/MP3PlayerGuiRepeatOff.png");
 	private static final ResourceLocation textureRepeatOn = new ResourceLocation("bfu", "textures/gui/MP3PlayerGuiRepeatOn.png");
+	private static final ResourceLocation textureRenameBar = new ResourceLocation("bfu", "textures/gui/MP3PlayerGuiRenameBar.png");
 	
 	
 	private ArrayList<Button> buttons;
@@ -100,7 +104,7 @@ public class GuiMP3Player extends GuiContainer{
 	public EntityPlayer player;
 	public World world;
 	
-	private File movingFile;
+	private File ChangableFile;
 	
 	public int CurrentAction;
 	public boolean isExplorer = true;
@@ -108,6 +112,8 @@ public class GuiMP3Player extends GuiContainer{
 	private boolean canActivate = false;
 	private boolean canChange = true;
 	private boolean canCancel = false;
+	private boolean whileGivingName = false;
+	private String whileGivingNameString = "";
 	
 	private static ArrayList<String> actions = new ArrayList<String>();
 	private static ArrayList<String> betweenActions = new ArrayList<String>();
@@ -140,6 +146,11 @@ public class GuiMP3Player extends GuiContainer{
 		((GuiButton)buttonList.get(2)).enabled = canChange;
 		((GuiButton)buttonList.get(3)).enabled = canActivate;
 		((GuiButton)buttonList.get(4)).enabled = canCancel;
+		
+		if (whileGivingName){
+			Minecraft.getMinecraft().getTextureManager().bindTexture(textureRenameBar);
+			drawTexturedModalRect(guiLeft, guiTop-40, 0, 0, 256, 40);
+		}
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft - 128, guiTop, 0, 0, 256, 256);
@@ -278,9 +289,17 @@ public class GuiMP3Player extends GuiContainer{
 			if (canChange){
 				fontRenderer.drawString(actions.get(CurrentAction), guiLeft-128+18, guiTop+45, 0x010101);
 			}else{
-				fontRenderer.drawString(betweenActions.get(0), guiLeft-128+18, guiTop+45, 0x010101);
+				if (CurrentAction == 4){//move "paste"
+					fontRenderer.drawString(betweenActions.get(0), guiLeft-128+18, guiTop+45, 0x010101);
+				}
+				if (CurrentAction == 2){//rename "rename"
+					fontRenderer.drawString(betweenActions.get(1), guiLeft-128+18, guiTop+45, 0x010101);
+				}
+				
 			}
-			
+			if (whileGivingName){
+				fontRenderer.drawString(whileGivingNameString, guiLeft+6, guiTop-24, 0x010101);
+			}
 			
 
 		}
@@ -546,20 +565,27 @@ public class GuiMP3Player extends GuiContainer{
 							if (canChange){
 								if (CurrentAction == 0 || CurrentAction == 1){
 									SoundLoader.ButtonClicked(true, bar.ID-1);
-								}else if (CurrentAction == 2){
-									
-								}else if (CurrentAction == 3){
+								}else if (CurrentAction == 2){//rename
+									canChange = false;
+									canCancel = true;
+									canActivate = true;
+									whileGivingName = true;
+									ChangableFile = new File(SoundLoader.folders.get(bar.ID-1).fullPath);
+									whileGivingNameString = ChangableFile.getName();
+								}else if (CurrentAction == 3){//delete
 									if (new File(bar.folder.fullPath).listFiles().length != 0){
 										player.addChatMessage(GuiColor.RED + "Error: Directory not empty");
 									}else{
 										new File(bar.folder.fullPath).delete();
 									}
-								}else if (CurrentAction == 4){
+								}else if (CurrentAction == 4){//move
 									canChange = false;
 									canCancel = true;
 									canActivate = true;
-									movingFile = new File(SoundLoader.folders.get(bar.ID-1).fullPath);
+									ChangableFile = new File(SoundLoader.folders.get(bar.ID-1).fullPath);
 								}
+							}else{
+								SoundLoader.ButtonClicked(true, bar.ID-1);
 							}
 						}
 					}
@@ -568,16 +594,21 @@ public class GuiMP3Player extends GuiContainer{
 							if (canChange){
 								if (CurrentAction == 0 || CurrentAction == 1){
 									SoundLoader.ButtonClicked(false, bar.ID-1);
-								}else if (CurrentAction == 2){
-									
-								}else if (CurrentAction == 3){
-									bar.file.delete();
-									SoundLoader.loadListForGui(false);
-								}else if (CurrentAction == 4){
+								}else if (CurrentAction == 2){//rename
 									canChange = false;
 									canCancel = true;
 									canActivate = true;
-									movingFile = SoundLoader.musicFiles.get(bar.ID-1);
+									whileGivingName = true;
+									ChangableFile = SoundLoader.musicFiles.get(bar.ID-1);
+									whileGivingNameString = ChangableFile.getName();
+								}else if (CurrentAction == 3){//delete
+									bar.file.delete();
+									SoundLoader.loadListForGui(false);
+								}else if (CurrentAction == 4){//move
+									canChange = false;
+									canCancel = true;
+									canActivate = true;
+									ChangableFile = SoundLoader.musicFiles.get(bar.ID-1);
 								}
 							}
 							
@@ -711,7 +742,7 @@ public class GuiMP3Player extends GuiContainer{
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		switch (button.id){
-		case 1:
+		case 1://open folder
 			try{
 				if (Desktop.isDesktopSupported()){
 					Desktop.getDesktop().open(new File(SoundLoader.folderLoaded));
@@ -720,7 +751,7 @@ public class GuiMP3Player extends GuiContainer{
 				e.printStackTrace();
 			}
 			break;
-		case 2:
+		case 2://now playing
 			if (Sounds.file != null){
 				SoundLoader.folderLoaded = SoundLoader.removeLastThing(Sounds.file.getAbsolutePath());
 				SoundLoader.loadListForGui(false);
@@ -732,23 +763,123 @@ public class GuiMP3Player extends GuiContainer{
 			}else{
 				CurrentAction = 0;
 			}
+			
+			if (CurrentAction == 5 || CurrentAction == 6){//Activatable actions
+				canActivate = true;
+			}else{
+				canActivate = false;
+			}
+			
 			break;
 		case 4://activate
 			if (!canChange){//you want to move loaded file here
-				System.out.println("Moving file: " + movingFile.getAbsolutePath());
-				movingFile.renameTo(new File(SoundLoader.folderLoaded+BlocksForUse.BackSlash+movingFile.getName()));
-				System.out.println("New location: " + movingFile.getAbsolutePath());
-				canChange = true;
-				canCancel = false;
-				canActivate = false;
-				SoundLoader.loadListForGui(false);
+				if (CurrentAction == 4){//move
+					System.out.println("Moving file: " + ChangableFile.getAbsolutePath());
+					if (ChangableFile.renameTo(new File(SoundLoader.folderLoaded+BlocksForUse.BackSlash+ChangableFile.getName()))){
+						System.out.println("Moving was successful");
+					}else{
+						System.out.println(GuiColor.RED + "Moving failed");
+					}
+					canChange = true;
+					canCancel = false;
+					canActivate = false;
+					SoundLoader.loadListForGui(false);
+				}
+				if (CurrentAction == 2){//ready to rename
+					if (ChangableFile.isDirectory() || !getExtension(ChangableFile).equals("")){
+						if (ChangableFile.renameTo(new File(SoundLoader.folderLoaded+BlocksForUse.BackSlash+whileGivingNameString))){
+							player.addChatMessage(GuiColor.GREEN + "Successful");
+						}else{
+							player.addChatMessage(GuiColor.RED + "Failed");
+						}
+						canCancel = false;
+						canChange = true;
+						canActivate = false;
+						if (CurrentAction == 5 || CurrentAction == 6){//Activatable actions
+							canActivate = true;
+						}
+					}else{
+						player.addChatMessage("You must have a file extension, for example .mp3 or .txt");
+					}
+				}
+				if (CurrentAction == 5){//ready to make a folder
+					File file = new File(SoundLoader.folderLoaded+BlocksForUse.BackSlash+whileGivingNameString);
+					if (getExtension(file).equals("")){
+						file.mkdir();
+					}else{
+						try {
+							file.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					SoundLoader.loadListForGui(false);
+					canCancel = false;
+					canChange = true;
+					canActivate = false;
+					if (CurrentAction == 5 || CurrentAction == 6){//Activatable actions
+						canActivate = true;
+					}
+				}
+				if (CurrentAction == 6){//ready to make a playlist
+					
+				}
+				whileGivingName = false;
+				whileGivingNameString = "";
 			}else{
-				
+				System.out.println(CurrentAction);
+				if (CurrentAction == 5){//make a folder
+					canChange = false;
+					canCancel = true;
+					whileGivingName = true;
+				}
+				if (CurrentAction == 6){//make a playlist
+					canChange = false;
+					canCancel = true;
+					whileGivingName = true;
+				}
+
 			}
 			break;
 		case 5://cancel
+			whileGivingName = false;
+			whileGivingNameString = "";
+			canChange = true;
+			canCancel = false;
+			canActivate = false;
+			if (CurrentAction == 5 || CurrentAction == 6){//Activatable actions
+				canActivate = true;
+			}
 			break;
 		}
 		
+	}
+	
+	@Override
+	public void handleKeyboardInput() {
+		
+		if (whileGivingName && Keyboard.getEventKeyState()){
+			if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE || Keyboard.getEventKey() == Keyboard.KEY_LSHIFT){
+				super.handleKeyboardInput();
+			}else if (Keyboard.getEventKey() == Keyboard.KEY_BACK){
+				if (whileGivingNameString.length() > 0){
+			    	if (whileGivingNameString.length() == 1){
+						whileGivingNameString = "";
+					}else{
+						whileGivingNameString = whileGivingNameString.substring(0, whileGivingNameString.length()-1);
+					}
+				}
+			}else{
+				String ch = Character.toString(Keyboard.getEventCharacter());
+				whileGivingNameString = whileGivingNameString + ch;
+			}
+		}else{
+			super.handleKeyboardInput();
+		}
+	}
+	
+	public String getExtension(File file){
+		return FilenameUtils.getExtension(file.getName());
 	}
 }
