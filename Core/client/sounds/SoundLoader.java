@@ -11,6 +11,7 @@ import Core.client.Interfaces.Folder;
 import Core.client.Interfaces.GuiColor;
 import Core.client.Interfaces.Info;
 import Core.client.Interfaces.MovableSelectionMP3Gui;
+import Core.client.Interfaces.guis.GuiMP3Player;
 import Core.modBFU.BlocksForUse;
 
 
@@ -19,9 +20,11 @@ public class SoundLoader {
 	public static ArrayList<File> musicFiles = new ArrayList<File>();
 	public static ArrayList<Folder> folders = new ArrayList<Folder>(); 
 	
+	public static Playlist SelectedPlaylist = null;
+	public static boolean PlaylistLoaded = false;
 	public static String folderLoaded = "";
-	public static ArrayList<File> drives = new ArrayList<File>(1);
-	public static ArrayList<String> driveNames = new ArrayList<String>(1);
+	public static ArrayList<File> drives = new ArrayList<File>();
+	public static ArrayList<String> driveNames = new ArrayList<String>();
 	public static ArrayList<MovableSelectionMP3Gui> ListForMusicTabs = new ArrayList<MovableSelectionMP3Gui>();
 	public static ArrayList<MovableSelectionMP3Gui> ListForFolderTabs = new ArrayList<MovableSelectionMP3Gui>();
 	
@@ -33,38 +36,51 @@ public class SoundLoader {
 		ListForMusicTabs = new ArrayList<MovableSelectionMP3Gui>();
 		ListForFolderTabs = new ArrayList<MovableSelectionMP3Gui>();
 		
-		if (folderLoaded.equals("")){
-			drives = new ArrayList<File>();
-			for (File file : File.listRoots()){
-				drives.add(file);
-			}
-			FileSystemView viewer = new FileSystemView() {
-				@Override
-				public File createNewFolder(File containingDir) throws IOException {
-					return null;
+		if (!PlaylistLoaded){
+			if (folderLoaded.equals("")){
+				drives = new ArrayList<File>();
+				for (File file : File.listRoots()){
+					drives.add(file);
 				}
-			};
-			
-			folders = new ArrayList<Folder>();
-			driveNames = new ArrayList<String>();
-			for (File file : drives){
-				Folder folder = new Folder(file.getAbsolutePath(), file.getAbsolutePath());
-				folders.add(folder);
-				driveNames.add(viewer.getSystemDisplayName(file));
-			}
-			for (int i = 0; i < drives.size(); i++){
-				if (!driveNames.get(i).equals("")){
-					folders.get(i).Name = driveNames.get(i);
+				FileSystemView viewer = new FileSystemView() {
+					@Override
+					public File createNewFolder(File containingDir) throws IOException {
+						return null;
+					}
+				};
+				
+				folders = new ArrayList<Folder>();
+				driveNames = new ArrayList<String>();
+				for (File file : drives){
+					Folder folder = new Folder(file.getAbsolutePath(), file.getAbsolutePath());
+					folders.add(folder);
+					driveNames.add(viewer.getSystemDisplayName(file));
 				}
-			}
-			
-		}else{
-			if (overwrite){
-				readFiles(true, folderLoaded);
+				for (int i = 0; i < drives.size(); i++){
+					if (!driveNames.get(i).equals("")){
+						folders.get(i).Name = driveNames.get(i);
+					}
+				}
+				
 			}else{
-				readFiles(false, folderLoaded);
+				if (overwrite){
+					readFiles(true, folderLoaded);
+				}else{
+					readFiles(false, folderLoaded);
+				}
 			}
+		}else{//loading playlist
+			musicFiles = new ArrayList<File>();
+			folders = new ArrayList<Folder>();
+			
+			if (SelectedPlaylist != null && !SelectedPlaylist.songs.isEmpty()){
+				for (File file : SelectedPlaylist.songs){
+					musicFiles.add(file);
+				}
+			}
+			
 		}
+		
 		
 		
 		if (!folders.isEmpty()){
@@ -92,43 +108,54 @@ public class SoundLoader {
 	/**
 	 * 
 	 * @param isFolder
+	 * @param isPlaylist
 	 * @param index
 	 */
-	public static void ButtonClicked(boolean isFolder, int index){
+	public static void ButtonClicked(boolean isFolder, boolean isPlaylist, int index){
 		if (isFolder){
 			Info.GuiMp3Player.MeasureVertical = 0;
 		}
 	
-		loop:
 		if (folderLoaded.equals("")){//if you press any drive
 			if (index != -1){
 				folderLoaded = drives.get(index).getAbsolutePath();
 				loadListForGui(false);
-			}else{
-				break loop;
 			}
 			
 		}else{
 			if (index == -1){//If you press back button
-				if (folderLoaded.length() == 3){
-					folderLoaded = "";
-					File[] roots = File.listRoots();
-					drives = new ArrayList<File>(1);
-			    	for(File file : roots){
-			    	    SoundLoader.drives.add(file);
-			    	}
+				if (PlaylistLoaded){
+					PlaylistLoaded = false;
+					loadListForGui(false);
+					Info.GuiMp3Player.canCancel = false;
+					Info.GuiMp3Player.canChange = true;
+					Info.GuiMp3Player.canActivate = false;
+					
+					if (Info.GuiMp3Player.CurrentAction == 5 || Info.GuiMp3Player.CurrentAction == 6){//Activatable actions
+						Info.GuiMp3Player.canActivate = true;
+					}
 				}else{
-					folderLoaded = removeLastThing(folderLoaded);
+					if (folderLoaded.length() == 3){
+						folderLoaded = "";
+						File[] roots = File.listRoots();
+						drives = new ArrayList<File>(1);
+				    	for(File file : roots){
+				    	    SoundLoader.drives.add(file);
+				    	}
+					}else{
+						folderLoaded = removeLastThing(folderLoaded);
+					}
+					musicFiles = new ArrayList<File>();
+					loadListForGui(false);
 				}
-				musicFiles = new ArrayList<File>();
-				loadListForGui(false);
+				
 			}else{
 				if (isFolder){
 					folderLoaded = folders.get(index).fullPath;
 					loadListForGui(false);
 				}else{
 					Sounds.tempFiles = musicFiles;
-					if (Info.GuiMp3Player.CurrentAction == 0 && Sounds.tempFiles.get(index).getName().indexOf(".mp3") != -1){
+					if (GuiMP3Player.getExtension(Sounds.tempFiles.get(index)).equals("mp3")){
 						Sounds.stopPlaying();
 						Sounds.files = Sounds.tempFiles;
 						Info.MP3PlayerIndexToOpen = index;
@@ -147,7 +174,6 @@ public class SoundLoader {
 								e.printStackTrace();
 								Info.GuiMp3Player.player.addChatMessage(GuiColor.RED + "ERROR: Unable to find default program to open this file");
 							}
-							
 						}
 					}
 				}
@@ -165,8 +191,7 @@ public class SoundLoader {
 		
 		File[] files = new File(path).listFiles();
 		if (files != null){
-			musicFiles = new ArrayList<File>();
-			folders = new ArrayList<Folder>();
+			
 			
 			for (File file : files){
 				if (file.isDirectory()){
@@ -198,6 +223,7 @@ public class SoundLoader {
 		}
 		return newString;
 	}
+	
 	
 	
 }

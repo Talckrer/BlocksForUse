@@ -286,7 +286,7 @@ public class Sounds implements Runnable{
     }
 
 	public static void UpdateFile(int index) {
-		if (!SoundLoader.musicFiles.isEmpty()){
+		if (!SoundLoader.musicFiles.isEmpty() && !Sounds.files.isEmpty() && index < Sounds.files.size()){
 			file = new File(getFile(index).getAbsolutePath());
 		}
 	}

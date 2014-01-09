@@ -25,6 +25,7 @@ import Core.client.Interfaces.GuiColor;
 import Core.client.Interfaces.Info;
 import Core.client.Interfaces.MovableSelectionMP3Gui;
 import Core.client.Interfaces.containers.ContainerMP3Player;
+import Core.client.sounds.Playlist;
 import Core.client.sounds.SoundLoader;
 import Core.client.sounds.Sounds;
 import Core.handlers.PacketHandler;
@@ -59,15 +60,18 @@ public class GuiMP3Player extends GuiContainer{
 		actions.add("Delete");
 		actions.add("Move");
 		actions.add("Make a folder/file");
-		actions.add("Make a playlist (WOP)");
+		actions.add("Make a playlist");
 		actions.add("Select a playlist (WOP)");
 		actions.add("Add to playlist (WOP)");
 		actions.add("Remove from playlist (WOP)");
 		CurrentAction = 0;
+		CurrentActionPlaylist = 0;
 		
 		betweenActions.add("Paste");
 		betweenActions.add("Rename");
 		betweenActions.add("Giving name");
+		
+		PlaylistActions.add("Remove");
 		
 		SoundLoader.loadListForGui(false);
 	}
@@ -108,16 +112,18 @@ public class GuiMP3Player extends GuiContainer{
 	private File ChangableFile;
 	
 	public int CurrentAction;
+	private int CurrentActionPlaylist;
 	public boolean isExplorer = true;
 	
-	private boolean canActivate = false;
-	private boolean canChange = true;
-	private boolean canCancel = false;
+	public boolean canActivate = false;
+	public boolean canChange = true;
+	public boolean canCancel = false;
 	private boolean whileGivingName = false;
 	private String whileGivingNameString = "";
 	
 	private static ArrayList<String> actions = new ArrayList<String>();
 	private static ArrayList<String> betweenActions = new ArrayList<String>();
+	private static ArrayList<String> PlaylistActions = new ArrayList<String>();
 	
 	private ItemStack stack;
 	public int durationInt;
@@ -278,7 +284,8 @@ public class GuiMP3Player extends GuiContainer{
 				}
 			}
 			
-			fontRenderer.drawSplitString(SoundLoader.folderLoaded, guiLeft-128+15, guiTop+95, 225, 0x010101);
+			fontRenderer.drawSplitString(SoundLoader.folderLoaded, guiLeft-128+15, guiTop+115, 225, 0x010101);
+			fontRenderer.drawString("Selected playlist: " + (SoundLoader.SelectedPlaylist != null ? SoundLoader.SelectedPlaylist.name : ""), guiLeft-128+15, guiTop+90, 0x010101);
 			fontRenderer.drawString("MP3 player", guiLeft - fontRenderer.getStringWidth("MP3 player") / 2, guiTop+12, 0x010101);
 			fontRenderer.drawSplitString(getSecondsPlayedAsString(durationInt), guiLeft + 122 - fontRenderer.getStringWidth(getSecondsPlayedAsString(durationInt)), guiTop + 176, 200, 0x151515);
 			fontRenderer.drawString(isDragging ? "00:00" : getSecondsPlayedAsString(Info.SecondsPlayed), guiLeft + 14 - 128, guiTop + 202, 0x151515);
@@ -322,11 +329,6 @@ public class GuiMP3Player extends GuiContainer{
 		drawTexturedQuadFit(guiLeft+128+x, guiTop+y, 225, 40, 0.1);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(isFolder ? textureFolderIcon : textureMusicIcon);
 		drawTexturedQuadFit(guiLeft+128+x + 8, guiTop+y + 12, 16, 16, 0.99);
-		
-//		if (isFolder){
-//			Minecraft.getMinecraft().getTextureManager().bindTexture(textureButtonAllMusicFiles);
-//			drawTexturedQuadFit(x+198, y+5, 40, 30, 2);
-//		}
 		
 		int size = fontRenderer.listFormattedStringToWidth(name, isFolder ? 158 : 180).size();
 		switch (size){
@@ -479,7 +481,7 @@ public class GuiMP3Player extends GuiContainer{
 		}
 		if (action.equals("back")){
 			Info.MP3PlayerIndexToOpen = isPlayingIndex;
-			SoundLoader.ButtonClicked(true, -1);
+			SoundLoader.ButtonClicked(true, false, -1);
 		}
 		if (action.equals("shuffle")){
 			Info.isShuffle = !Info.isShuffle;
@@ -550,26 +552,10 @@ public class GuiMP3Player extends GuiContainer{
 				isDraggingVertical = true;	
 			}else{
 				if (isPointInRegion(128+13, 43, 225, 201, x, y)){
-//					if (isPointInRegion(128+188, 43, 40, 201, x, y)){
-//						for (MovableSelectionMP3Gui bar : folderTabs){
-//							if (isPointInRegion(128+198, bar.guiY+5, 40, 30, x, y)){
-//								Sounds.files = SoundLoader.folders.get(SoundLoader.folderLoaded).AllMusicFiles;
-//								Info.MP3PlayerIndexToOpen = 0;
-//								Info.SecondsPlayed = 0;
-//								isPlayingIndex = 0;
-//								continuePlaying = true;
-//								isPlaying = true;
-//								Sounds.stopPlaying();
-//								Sounds.playRecord(Info.MP3PlayerIndexToOpen);
-//							}
-//						}
-//					}
 					for (MovableSelectionMP3Gui bar : folderTabs){
 						if (isPointInRegion(128+13, bar.guiY, 225, 32, x, y)){
 							if (canChange){
-								if (CurrentAction == 0 || CurrentAction == 1){
-									SoundLoader.ButtonClicked(true, bar.ID-1);
-								}else if (CurrentAction == 2){//rename
+								if (CurrentAction == 2){//rename
 									canChange = false;
 									canCancel = true;
 									canActivate = true;
@@ -587,33 +573,58 @@ public class GuiMP3Player extends GuiContainer{
 									canCancel = true;
 									canActivate = true;
 									ChangableFile = new File(SoundLoader.folders.get(bar.ID-1).fullPath);
+								}else{
+									SoundLoader.ButtonClicked(true, false, bar.ID-1);
 								}
 							}else{
-								SoundLoader.ButtonClicked(true, bar.ID-1);
+								SoundLoader.ButtonClicked(true, false, bar.ID-1);
 							}
 						}
 					}
 					for (MovableSelectionMP3Gui bar : musicTabs){
 						if (isPointInRegion(128+13, bar.guiY, 225, 32, x, y)){
 							if (canChange){
-								if (CurrentAction == 0 || CurrentAction == 1){
-									SoundLoader.ButtonClicked(false, bar.ID-1);
-								}else if (CurrentAction == 2){//rename
-									canChange = false;
-									canCancel = true;
-									canActivate = true;
-									whileGivingName = true;
-									ChangableFile = SoundLoader.musicFiles.get(bar.ID-1);
-									whileGivingNameString = ChangableFile.getName();
-								}else if (CurrentAction == 3){//delete
-									bar.file.delete();
-									SoundLoader.loadListForGui(false);
-								}else if (CurrentAction == 4){//move
-									canChange = false;
-									canCancel = true;
-									canActivate = true;
-									ChangableFile = SoundLoader.musicFiles.get(bar.ID-1);
+								if (!SoundLoader.PlaylistLoaded){
+									if (CurrentAction == 2){//rename
+										canChange = false;
+										canCancel = true;
+										canActivate = true;
+										whileGivingName = true;
+										ChangableFile = SoundLoader.musicFiles.get(bar.ID-1);
+										whileGivingNameString = ChangableFile.getName();
+									}else if (CurrentAction == 3){//delete
+										bar.file.delete();
+										SoundLoader.loadListForGui(false);
+									}else if (CurrentAction == 4){//move
+										canChange = false;
+										canCancel = true;
+										canActivate = true;
+										ChangableFile = SoundLoader.musicFiles.get(bar.ID-1);
+									}else if (CurrentAction == 7){//select a playlist
+										File file = SoundLoader.musicFiles.get(bar.ID-1);
+										if (getExtension(file).equals("txt") && Playlist.isPlaylist(file)){
+											SoundLoader.SelectedPlaylist = new Playlist(file, file.getName());
+											System.out.println("Selected playlist: "+SoundLoader.SelectedPlaylist.name);
+										}
+									}else if (CurrentAction == 8){//Add a song to playlist
+										File file = SoundLoader.musicFiles.get(bar.ID-1);
+										if (SoundLoader.SelectedPlaylist != null){
+											SoundLoader.SelectedPlaylist.addSong(file);
+										}
+									}else{
+										File file = SoundLoader.musicFiles.get(bar.ID-1);
+										SoundLoader.ButtonClicked(false, Playlist.isPlaylist(file), bar.ID-1);
+									}
+								}else{
+									if (CurrentAction == 4){//remove
+										if (SoundLoader.SelectedPlaylist != null){
+											SoundLoader.SelectedPlaylist.removeSong(bar.ID-1);
+										}
+									}else{
+										SoundLoader.ButtonClicked(false, false, bar.ID-1);
+									}
 								}
+								
 							}
 							
 						}
@@ -710,25 +721,6 @@ public class GuiMP3Player extends GuiContainer{
 		folderTabs = Info.folderTabs;
 		musicTabs = Info.musicTabs;
 	}
-	
-	/*@Override
-	public void handleKeyboardInput() {
-		super.handleKeyboardInput();
-		
-		System.out.println("Key number: "+Keyboard.getEventKey());
-		if (Keyboard.getEventKeyState()){
-			int c = Keyboard.getEventKey() + 1;
-			System.out.println(c);
-			if (c > 0 && c < 10){
-				if (Keyboard.isKeyDown(42)){
-					SoundLoader.ButtonClicked(false, c);
-				}else{
-					SoundLoader.ButtonClicked(true, c);
-				}
-				
-			}
-		}
-	}*/
 	
 	@Override
 	protected void drawHoveringText(List list, int x, int y, FontRenderer font) {
@@ -827,7 +819,19 @@ public class GuiMP3Player extends GuiContainer{
 					}
 				}
 				if (CurrentAction == 6){//ready to make a playlist
-					
+					File file = new File(SoundLoader.folderLoaded+BlocksForUse.BackSlash+whileGivingNameString+".txt");
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					SoundLoader.loadListForGui(false);
+					canCancel = false;
+					canChange = true;
+					canActivate = false;
+					if (CurrentAction == 5 || CurrentAction == 6){//Activatable actions
+						canActivate = true;
+					}
 				}
 				whileGivingName = false;
 				whileGivingNameString = "";
@@ -882,8 +886,10 @@ public class GuiMP3Player extends GuiContainer{
 			super.handleKeyboardInput();
 		}
 	}
+
 	
-	public String getExtension(File file){
+	
+	public static String getExtension(File file){
 		return FilenameUtils.getExtension(file.getName());
 	}
 }
