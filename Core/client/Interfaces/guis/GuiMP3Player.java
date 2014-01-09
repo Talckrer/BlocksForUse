@@ -55,10 +55,10 @@ public class GuiMP3Player extends GuiContainer{
 		
 		actions.add("Play/Open folder");
 		actions.add("Open with default program");
-		actions.add("Rename (WOP)");
+		actions.add("Rename");
 		actions.add("Delete");
 		actions.add("Move");
-		actions.add("Make a folder/file (WOP)");
+		actions.add("Make a folder/file");
 		actions.add("Make a playlist (WOP)");
 		actions.add("Select a playlist (WOP)");
 		actions.add("Add to playlist (WOP)");
@@ -67,6 +67,7 @@ public class GuiMP3Player extends GuiContainer{
 		
 		betweenActions.add("Paste");
 		betweenActions.add("Rename");
+		betweenActions.add("Giving name");
 		
 		SoundLoader.loadListForGui(false);
 	}
@@ -294,6 +295,9 @@ public class GuiMP3Player extends GuiContainer{
 				}
 				if (CurrentAction == 2){//rename "rename"
 					fontRenderer.drawString(betweenActions.get(1), guiLeft-128+18, guiTop+45, 0x010101);
+				}
+				if (CurrentAction == 5 || CurrentAction == 6){//giving name (1.Folder, 2.Playlist)
+					fontRenderer.drawString(betweenActions.get(2), guiLeft-128+18, guiTop+45, 0x010101);
 				}
 				
 			}
