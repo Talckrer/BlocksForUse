@@ -20,7 +20,7 @@ public class ThreadSecondUpdate extends Thread implements Runnable {
 					BlocksForUse.info.SecondsPlayed++;
 				}
 				second++;
-				if (second >= 3){
+				if (second >= 2){
 					second = 0;
 					SoundLoader.loadListForGui(false);
 				}
