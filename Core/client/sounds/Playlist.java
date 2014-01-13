@@ -21,6 +21,9 @@ public class Playlist {
 		this.name = name;
 		songs = new ArrayList<File>();
 		
+		if (isPlaylist(file)){
+			ReloadFile();
+		}
 		RewriteFile();
 	}
 	
@@ -46,7 +49,6 @@ public class Playlist {
 			while (scanner.hasNextLine()){
 				buffer = scanner.nextLine();
 				songs.add(new File(buffer));
-				System.out.println(buffer);
 			}
 		}
 	}
@@ -59,27 +61,32 @@ public class Playlist {
 			e.printStackTrace();
 		}
 		
-		if (!songs.isEmpty()){
-			try {
-		        BufferedWriter out = new BufferedWriter(new FileWriter(file));
-		        out.write("Playlist" + "\n");
-		            for (File file : songs) {
-		                out.write(file.getAbsolutePath() + "\n");
-		            }
-		            out.close();
-		    }catch (IOException e) {
-		    	e.printStackTrace();
-		    }
-		}
+		
+		try{
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			out.write("Playlist");
+			out.newLine();
+			       
+			if (!songs.isEmpty()){
+				for (File file : songs) {
+					out.write(file.getAbsolutePath());
+						out.newLine();
+				}
+			}
+			out.close();
+			
+		 }catch (IOException e) {
+		    e.printStackTrace();
+		 }
 	}
 	
-	public void removeSong(String fullPath){
+	public void removeSong(File file){
 		ReloadFile();
 		
 		if (!songs.isEmpty()){
 			for (int i = 0; i < songs.size();i++){
-				File file = songs.get(i);
-				if (file.getAbsolutePath().equals(fullPath)){
+				File file1 = songs.get(i);
+				if (file1.getAbsolutePath().equals(file.getAbsolutePath())){
 					songs.remove(i);
 				}
 			}

@@ -109,12 +109,7 @@ public class Sounds implements Runnable{
 	}
 	
 	public static boolean canRetrieveInfo(int index){
-		if (!SoundLoader.musicFiles.isEmpty()){
-			return files.get(index).getName().indexOf(".mp3") != -1 ? true : false;
-		}else{
-			return false;
-		}
-		
+		return files.get(index).getName().indexOf(".mp3") != -1 ? true : false;
 	}
 	
 	public static void playRecord(int index){

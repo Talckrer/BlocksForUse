@@ -56,12 +56,13 @@ public class SoundLoader {
 					folders.add(folder);
 					driveNames.add(viewer.getSystemDisplayName(file));
 				}
-				for (int i = 0; i < drives.size(); i++){
-					if (!driveNames.get(i).equals("")){
-						folders.get(i).Name = driveNames.get(i);
+				if (!driveNames.isEmpty()){
+					for (int i = 0; i < drives.size(); i++){
+						if (!driveNames.get(i).equals("")){
+							folders.get(i).Name = driveNames.get(i);
+						}
 					}
 				}
-				
 			}else{
 				if (overwrite){
 					readFiles(true, folderLoaded);
@@ -154,29 +155,39 @@ public class SoundLoader {
 					folderLoaded = folders.get(index).fullPath;
 					loadListForGui(false);
 				}else{
-					Sounds.tempFiles = musicFiles;
-					if (GuiMP3Player.getExtension(Sounds.tempFiles.get(index)).equals("mp3")){
-						Sounds.stopPlaying();
-						Sounds.files = Sounds.tempFiles;
-						Info.MP3PlayerIndexToOpen = index;
-						Info.SecondsPlayed = 0;
-						Info.GuiMp3Player.isPlayingIndex = index;
-						Info.GuiMp3Player.continuePlaying = true;
-						Info.GuiMp3Player.isPlaying = true;
-						
-						Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
-						Sounds.playRecord(Info.MP3PlayerIndexToOpen);
+					if (isPlaylist){
+						PlaylistLoaded = true;
+						loadListForGui(false);
+						Info.GuiMp3Player.canCancel = false;
+						Info.GuiMp3Player.canChange = true;
+						Info.GuiMp3Player.canActivate = false;
+						Info.GuiMp3Player.CurrentAction = 0;
 					}else{
-						if (Desktop.isDesktopSupported()){
-							try{
-								Desktop.getDesktop().open(Sounds.tempFiles.get(index));
-							}catch (IOException e){
-								e.printStackTrace();
-								Info.GuiMp3Player.player.addChatMessage(GuiColor.RED + "ERROR: Unable to find default program to open this file");
+						Sounds.tempFiles = musicFiles;
+						if (GuiMP3Player.getExtension(Sounds.tempFiles.get(index)).equals("mp3")){
+							Sounds.stopPlaying();
+							Sounds.files = Sounds.tempFiles;
+							Info.MP3PlayerIndexToOpen = index;
+							Info.SecondsPlayed = 0;
+							Info.GuiMp3Player.isPlayingIndex = index;
+							Info.GuiMp3Player.continuePlaying = true;
+							Info.GuiMp3Player.isPlaying = true;
+								
+							Info.GuiMp3Player.durationInt = Integer.parseInt(Sounds.getInfo(Info.GuiMp3Player.isPlayingIndex, "durationInt"));
+							Sounds.playRecord(Info.MP3PlayerIndexToOpen);
+						}else{
+							if (Desktop.isDesktopSupported()){
+								try{
+									Desktop.getDesktop().open(Sounds.tempFiles.get(index));
+								}catch (IOException e){
+									e.printStackTrace();
+									Info.GuiMp3Player.player.addChatMessage(GuiColor.RED + "ERROR: Unable to find default program to open this file");
+								}
 							}
 						}
 					}
 				}
+				
 			}
 		}
 		
@@ -192,6 +203,8 @@ public class SoundLoader {
 		File[] files = new File(path).listFiles();
 		if (files != null){
 			
+			musicFiles = new ArrayList<File>();
+			folders = new ArrayList<Folder>();
 			
 			for (File file : files){
 				if (file.isDirectory()){
